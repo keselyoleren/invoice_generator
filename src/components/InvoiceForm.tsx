@@ -31,11 +31,11 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
       phone: ''
     },
     business: initialData?.business || {
-      name: '',
-      email: '',
-      address: '',
-      phone: '',
-      logo: 'https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=100'
+      name: 'Klei Mate',
+      email: 'kleimatee@gmail.com',
+      address: 'Jl. Mawar Jl. Timbulrejo No.RT 04, RW.04, Krodan, Maguwoharj',
+      phone: '082141096938',
+      logo: '/img/logo_keli_mate.jpeg'
     },
     items: initialData?.items || [
       {
