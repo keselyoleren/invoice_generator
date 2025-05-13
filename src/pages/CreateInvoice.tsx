@@ -15,13 +15,11 @@ const CreateInvoice: React.FC = () => {
         filename: 'rename.pdf',
         page: {      
           margin: {
-            top: 7.56, 
-            right: 7.56,
-            bottom: 7.56,
-            left: 7.56
+            top: 0, 
+            right: 0,
+            bottom: 0,
+            left: 0
           },
-          format: 'a4',
-          orientation: 'portrait'
         }
       });
 

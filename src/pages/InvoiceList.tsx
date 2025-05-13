@@ -11,10 +11,24 @@ const CreateInvoice: React.FC = () => {
   const navigate = useNavigate();
   const { createInvoice } = useInvoices();
   const [previewInvoice, setPreviewInvoice] = useState<any>(null);
+
   const { toPDF, targetRef } = usePDF({ 
     filename: 'invoice.pdf',
     page: {
-      margin: 2,
+      // Apply consistent margins for the PDF output
+      format: 'A4',
+      margin: {
+        top: 15, 
+        right: 15,
+        bottom: 15,
+        left: 15
+      },
+    },
+    // Control how the content fits within the PDF
+    canvas: {
+      // Ensure content fits properly within the defined margins
+      mobileOptimization: false,
+      scale: 1,
     }
   });
 
@@ -67,9 +81,11 @@ const CreateInvoice: React.FC = () => {
         
         <div className="overflow-y-auto pb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Preview</h1>
-          <div ref={targetRef}>
+          <div className="pdf-container">
             {previewInvoice ? (
-              <InvoicePreview invoice={previewInvoice} />
+              <div ref={targetRef} className="bg-white shadow-md overflow-hidden">
+                <InvoicePreview invoice={previewInvoice} />
+              </div>
             ) : (
               <div className="bg-white p-8 rounded-lg shadow-md text-center">
                 <p className="text-gray-500">Fill out the form to see a preview of your invoice</p>

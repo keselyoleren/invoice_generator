@@ -14,18 +14,16 @@ const EditInvoice: React.FC = () => {
   const [previewInvoice, setPreviewInvoice] = useState<any>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const { toPDF } = usePDF({ 
-      filename: 'rename.pdf',
+      filename: 'invoice_edit.pdf',
       page: {      
         margin: {
-          top: 7.56, 
-          right: 7.56,
-          bottom: 7.56,
-          left: 7.56
+          top: 0, 
+          right: 0,
+          bottom: 0,
+          left: 0
         },
-        format: 'a4',
-        orientation: 'portrait'
-      }
-    });
+    },    
+  });
 
   useEffect(() => {
     if (id) {
