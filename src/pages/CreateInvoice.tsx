@@ -11,12 +11,19 @@ const CreateInvoice: React.FC = () => {
   const navigate = useNavigate();
   const { createInvoice } = useInvoices();
   const [previewInvoice, setPreviewInvoice] = useState<any>(null);
-  const { toPDF, targetRef } = usePDF({ 
-    filename: 'invoice.pdf',
-    page: {
-      margin: 20,
-    }
-  });
+  const { toPDF } = usePDF({ 
+        filename: 'rename.pdf',
+        page: {      
+          margin: {
+            top: 7.56, 
+            right: 7.56,
+            bottom: 7.56,
+            left: 7.56
+          },
+          format: 'a4',
+          orientation: 'portrait'
+        }
+      });
 
   const handleSubmit = (data: InvoiceFormData) => {
     const newInvoice = createInvoice(data);

@@ -33,7 +33,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
     business: initialData?.business || {
       name: 'Klei Mate',
       email: 'kleimatee@gmail.com',
-      address: 'Jl. Mawar Jl. Timbulrejo No.RT 04, RW.04, Krodan, Maguwoharj',
+      address: 'Jl. Mawar Jl. Timbulrejo No.RT 04, RW.04, Krodan, Maguwoharjo',
       phone: '082141096938',
       logo: '/img/logo_keli_mate.jpeg'
     },
@@ -46,8 +46,8 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
         tax: 0
       }
     ],
-    notes: initialData?.notes || '',
-    terms: initialData?.terms || 'Pembayaran harus dilakukan dalam 30 hari setelah menerima invoice.',
+    notes: initialData?.notes || 'Transfer Bank: BCA No rek 4400136641 Atas Nama Rida Anggita Nurtrisna',
+    terms: initialData?.terms || '',
     status: initialData?.status || 'draft'
   });
 
@@ -386,7 +386,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Catatan</label>
+        <label className="block text-sm font-medium text-gray-700">Bank Transfer</label>
         <textarea
           name="notes"
           value={formData.notes}

@@ -134,7 +134,7 @@ const InvoicePreview = forwardRef(
           <div className="border-t pt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             {invoice.notes && (
               <div>
-                <h3 className="font-semibold text-gray-700 mb-2">Notes:</h3>
+                <h3 className="font-semibold text-gray-700 mb-2">Transfer:</h3>
                 <p className="text-gray-600 whitespace-pre-line">{invoice.notes}</p>
               </div>
             )}
