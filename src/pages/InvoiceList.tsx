@@ -7,6 +7,12 @@ import { InvoiceFormData } from '../types/invoice';
 import { Download, ArrowLeft } from 'lucide-react';
 import { usePDF } from 'react-to-pdf';
 
+const translations = {
+  en: {
+    invoice: 'Invoice'
+  }
+};
+
 const CreateInvoice: React.FC = () => {
   const navigate = useNavigate();
   const { createInvoice } = useInvoices();
@@ -15,7 +21,6 @@ const CreateInvoice: React.FC = () => {
   const { toPDF, targetRef } = usePDF({ 
     filename: 'invoice.pdf',
     page: {
-      // Apply consistent margins for the PDF output
       format: 'A4',
       margin: {
         top: 15, 
@@ -24,9 +29,7 @@ const CreateInvoice: React.FC = () => {
         left: 15
       },
     },
-    // Control how the content fits within the PDF
     canvas: {
-      // Ensure content fits properly within the defined margins
       mobileOptimization: false,
       scale: 1,
     }
@@ -84,7 +87,7 @@ const CreateInvoice: React.FC = () => {
           <div className="pdf-container">
             {previewInvoice ? (
               <div ref={targetRef} className="bg-white shadow-md overflow-hidden">
-                <InvoicePreview invoice={previewInvoice} />
+                <InvoicePreview invoice={previewInvoice} translations={translations} />
               </div>
             ) : (
               <div className="bg-white p-8 rounded-lg shadow-md text-center">

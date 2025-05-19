@@ -7,6 +7,12 @@ import { InvoiceFormData } from '../types/invoice';
 import { Download, ArrowLeft } from 'lucide-react';
 import { usePDF } from 'react-to-pdf';
 
+const translations = {
+  en: {
+    invoice: 'Invoice'
+  }
+};
+
 const CreateInvoice: React.FC = () => {
   const navigate = useNavigate();
   const { createInvoice } = useInvoices();
@@ -74,7 +80,7 @@ const CreateInvoice: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Preview</h1>
           <div ref={targetRef}>
             {previewInvoice ? (
-              <InvoicePreview invoice={previewInvoice} />
+              <InvoicePreview invoice={previewInvoice} translations={translations} />
             ) : (
               <div className="bg-white p-8 rounded-lg shadow-md text-center">
                 <p className="text-gray-500">Fill out the form to see a preview of your invoice</p>
