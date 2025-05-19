@@ -20,23 +20,37 @@ const InvoicePreview: React.FC<InvoicePreviewProps> = ({ invoice, translations }
   const t = translations[invoice.language];
 
   return (
-    <>
-      {/* Currency formatting in items table */}
-      <td className="py-3 px-4 text-right text-sm text-gray-800">
-        {formatCurrency(item.price, invoice.currency)}
-      </td>
-
+    <div>
       {/* Text content with translations */}
       <h1 className="text-2xl font-bold text-gray-800">{t.invoice}</h1>
 
       {/* Date formatting */}
       <p className="text-gray-800">{formatDate(invoice.date, invoice.language)}</p>
 
+      {/* Items table */}
+      <table>
+        <tbody>
+          {invoice.items.map((item, index) => (
+            <tr key={index}>
+              <td className="py-3 px-4 text-right text-sm text-gray-800">
+                {formatCurrency(item.price, invoice.currency)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
       {/* Currency formatting in totals */}
-      <td className="py-3 px-4 text-right text-sm text-gray-800 font-medium">
-        {formatCurrency(invoice.subtotal, invoice.currency)}
-      </td>
-    </>
+      <table>
+        <tbody>
+          <tr>
+            <td className="py-3 px-4 text-right text-sm text-gray-800 font-medium">
+              {formatCurrency(invoice.subtotal, invoice.currency)}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 };
 
