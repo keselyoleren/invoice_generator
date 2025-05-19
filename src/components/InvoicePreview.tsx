@@ -16,3 +16,5 @@ const t = translations[invoice.language];
 <td className="py-3 px-4 text-right text-sm text-gray-800 font-medium">
   {formatCurrency(invoice.subtotal, invoice.currency)}
 </td>
+
+export default t
