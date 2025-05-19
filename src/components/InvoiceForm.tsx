@@ -486,8 +486,8 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
                       type="number"
                       value={item.price}
                       onChange={(e) => handleItemChange(item.id, 'price', parseFloat(e.target.value) || 0)}
-                      min="0"
                       required
+                      min="0"
                       className="w-full rounded-md border-gray-300 shadow-sm p-2 border"
                     />
                   </td>
@@ -497,6 +497,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
                       value={item.tax || 0}
                       onChange={(e) => handleItemChange(item.id, 'tax', parseFloat(e.target.value) || 0)}
                       min="0"
+                      step="0.1"
                       className="w-full rounded-md border-gray-300 shadow-sm p-2 border"
                     />
                   </td>
