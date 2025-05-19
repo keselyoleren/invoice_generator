@@ -36,6 +36,8 @@ export interface Invoice {
   taxTotal: number;
   total: number;
   createdAt: string;
+  language: 'id' | 'en';
+  currency: 'IDR' | 'USD';
 }
 
 export type InvoiceFormData = Omit<Invoice, 'id' | 'subtotal' | 'taxTotal' | 'total' | 'createdAt'>;
