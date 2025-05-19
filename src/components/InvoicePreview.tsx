@@ -1,20 +1,43 @@
-// Update the InvoicePreview component to use translations and currency formatting
-const t = translations[invoice.language];
+import React from 'react';
+import { formatCurrency, formatDate } from '../utils/format';
 
-// Update currency formatting in the items table
-<td className="py-3 px-4 text-right text-sm text-gray-800">
-  {formatCurrency(item.price, invoice.currency)}
-</td>
+interface InvoicePreviewProps {
+  invoice: {
+    language: string;
+    currency: string;
+    date: string;
+    subtotal: number;
+    items: Array<{
+      price: number;
+    }>;
+  };
+  translations: Record<string, {
+    invoice: string;
+  }>;
+}
 
-// Update all text content with translations
-<h1 className="text-2xl font-bold text-gray-800">{t.invoice}</h1>
+const InvoicePreview: React.FC<InvoicePreviewProps> = ({ invoice, translations }) => {
+  const t = translations[invoice.language];
 
-// Update date formatting
-<p className="text-gray-800">{formatDate(invoice.date, invoice.language)}</p>
+  return (
+    <>
+      {/* Currency formatting in items table */}
+      <td className="py-3 px-4 text-right text-sm text-gray-800">
+        {formatCurrency(item.price, invoice.currency)}
+      </td>
 
-// Update currency formatting in totals
-<td className="py-3 px-4 text-right text-sm text-gray-800 font-medium">
-  {formatCurrency(invoice.subtotal, invoice.currency)}
-</td>
+      {/* Text content with translations */}
+      <h1 className="text-2xl font-bold text-gray-800">{t.invoice}</h1>
 
-export default t
+      {/* Date formatting */}
+      <p className="text-gray-800">{formatDate(invoice.date, invoice.language)}</p>
+
+      {/* Currency formatting in totals */}
+      <td className="py-3 px-4 text-right text-sm text-gray-800 font-medium">
+        {formatCurrency(invoice.subtotal, invoice.currency)}
+      </td>
+    </>
+  );
+};
+
+export default InvoicePreview;
