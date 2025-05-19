@@ -32,6 +32,17 @@ export const shortFormatDate = (dateString: string, language: string): string =>
   }).format(date);
 };
 
+export const getCurrentDate = (): string => {
+  const today = new Date();
+  return today.toISOString().split('T')[0];
+};
+
+export const getDefaultDueDate = (): string => {
+  const date = new Date();
+  date.setDate(date.getDate() + 30); // Set due date to 30 days from now
+  return date.toISOString().split('T')[0];
+};
+
 export const translations = {
   id: {
     invoice: 'FAKTUR',
