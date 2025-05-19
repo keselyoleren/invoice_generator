@@ -8,7 +8,133 @@ interface InvoiceFormProps {
   onSubmit: (data: InvoiceFormData) => void;
 }
 
+interface Translations {
+  [key: string]: {
+    en: string;
+    id: string;
+  };
+}
+
+const translations: Translations = {
+  businessInfo: {
+    en: 'Business Information',
+    id: 'Informasi Bisnis'
+  },
+  customerInfo: {
+    en: 'Customer Information',
+    id: 'Informasi Pelanggan'
+  },
+  logoUrl: {
+    en: 'Logo URL',
+    id: 'URL Logo'
+  },
+  businessName: {
+    en: 'Business Name',
+    id: 'Nama Bisnis'
+  },
+  email: {
+    en: 'Email',
+    id: 'Email'
+  },
+  address: {
+    en: 'Address',
+    id: 'Alamat'
+  },
+  phone: {
+    en: 'Phone',
+    id: 'Telepon'
+  },
+  customerName: {
+    en: 'Customer Name',
+    id: 'Nama Pelanggan'
+  },
+  invoiceNumber: {
+    en: 'Invoice Number',
+    id: 'Nomor Invoice'
+  },
+  date: {
+    en: 'Date',
+    id: 'Tanggal'
+  },
+  dueDate: {
+    en: 'Due Date',
+    id: 'Jatuh Tempo'
+  },
+  status: {
+    en: 'Status',
+    id: 'Status'
+  },
+  invoiceItems: {
+    en: 'Invoice Items',
+    id: 'Item Invoice'
+  },
+  description: {
+    en: 'Description',
+    id: 'Deskripsi'
+  },
+  quantity: {
+    en: 'Quantity',
+    id: 'Jumlah'
+  },
+  price: {
+    en: 'Price',
+    id: 'Harga'
+  },
+  tax: {
+    en: 'Tax %',
+    id: 'PPN %'
+  },
+  total: {
+    en: 'Total',
+    id: 'Total'
+  },
+  action: {
+    en: 'Action',
+    id: 'Aksi'
+  },
+  addItem: {
+    en: 'Add Item',
+    id: 'Tambah Item'
+  },
+  bankTransfer: {
+    en: 'Bank Transfer',
+    id: 'Transfer Bank'
+  },
+  termsConditions: {
+    en: 'Terms & Conditions',
+    id: 'Syarat & Ketentuan'
+  },
+  saveInvoice: {
+    en: 'Save Invoice',
+    id: 'Simpan Invoice'
+  },
+  draft: {
+    en: 'Draft',
+    id: 'Draft'
+  },
+  sent: {
+    en: 'Sent',
+    id: 'Terkirim'
+  },
+  paid: {
+    en: 'Paid',
+    id: 'Lunas'
+  },
+  additionalNotes: {
+    en: 'Additional notes...',
+    id: 'Catatan tambahan...'
+  },
+  paymentTerms: {
+    en: 'Payment terms and conditions...',
+    id: 'Syarat dan ketentuan pembayaran...'
+  }
+};
+
 const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
+  const [language, setLanguage] = useState<'en' | 'id'>('id');
+  
+  const t = (key: string) => translations[key]?.[language] || key;
+
   const getCurrentDate = () => {
     const today = new Date();
     return today.toISOString().split('T')[0];
@@ -122,11 +248,30 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-lg p-6 shadow-md">
+      <div className="flex justify-end mb-4">
+        <div className="inline-flex rounded-md shadow-sm">
+          <button
+            type="button"
+            onClick={() => setLanguage('id')}
+            className={`px-4 py-2 text-sm font-medium rounded-l-lg ${language === 'id' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+          >
+            ID
+          </button>
+          <button
+            type="button"
+            onClick={() => setLanguage('en')}
+            className={`px-4 py-2 text-sm font-medium rounded-r-lg ${language === 'en' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+          >
+            EN
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-700">Informasi Bisnis</h3>
+          <h3 className="text-lg font-medium text-gray-700">{t('businessInfo')}</h3>
           <div>
-            <label className="block text-sm font-medium text-gray-700">URL Logo</label>
+            <label className="block text-sm font-medium text-gray-700">{t('logoUrl')}</label>
             <input
               type="text"
               name="logo"
@@ -137,7 +282,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Nama Bisnis</label>
+            <label className="block text-sm font-medium text-gray-700">{t('businessName')}</label>
             <input
               type="text"
               name="name"
@@ -145,11 +290,11 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
               onChange={handleBusinessChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-              placeholder="Nama Bisnis Anda"
+              placeholder={t('businessName')}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">{t('email')}</label>
             <input
               type="email"
               name="email"
@@ -157,23 +302,23 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
               onChange={handleBusinessChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-              placeholder="bisnis@contoh.com"
+              placeholder="business@example.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Alamat</label>
+            <label className="block text-sm font-medium text-gray-700">{t('address')}</label>
             <textarea
               name="address"
               value={formData.business.address}
               onChange={handleBusinessChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-              placeholder="Jl. Bisnis No. 123, Kota, Negara"
+              placeholder={t('address')}
               rows={3}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Telepon</label>
+            <label className="block text-sm font-medium text-gray-700">{t('phone')}</label>
             <input
               type="text"
               name="phone"
@@ -186,9 +331,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-700">Informasi Pelanggan</h3>
+          <h3 className="text-lg font-medium text-gray-700">{t('customerInfo')}</h3>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Nama Pelanggan</label>
+            <label className="block text-sm font-medium text-gray-700">{t('customerName')}</label>
             <input
               type="text"
               name="name"
@@ -196,11 +341,11 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
               onChange={handleCustomerChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-              placeholder="Nama Pelanggan"
+              placeholder={t('customerName')}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">{t('email')}</label>
             <input
               type="email"
               name="email"
@@ -208,23 +353,23 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
               onChange={handleCustomerChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-              placeholder="pelanggan@contoh.com"
+              placeholder="customer@example.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Alamat</label>
+            <label className="block text-sm font-medium text-gray-700">{t('address')}</label>
             <textarea
               name="address"
               value={formData.customer.address}
               onChange={handleCustomerChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-              placeholder="Jl. Pelanggan No. 456, Kota, Negara"
+              placeholder={t('address')}
               rows={3}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Telepon</label>
+            <label className="block text-sm font-medium text-gray-700">{t('phone')}</label>
             <input
               type="text"
               name="phone"
@@ -239,7 +384,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Nomor Invoice</label>
+          <label className="block text-sm font-medium text-gray-700">{t('invoiceNumber')}</label>
           <input
             type="text"
             name="invoiceNumber"
@@ -250,7 +395,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Tanggal</label>
+          <label className="block text-sm font-medium text-gray-700">{t('date')}</label>
           <input
             type="date"
             name="date"
@@ -261,7 +406,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Jatuh Tempo</label>
+          <label className="block text-sm font-medium text-gray-700">{t('dueDate')}</label>
           <input
             type="date"
             name="dueDate"
@@ -274,42 +419,42 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t('status')}</label>
         <select
           name="status"
           value={formData.status}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
         >
-          <option value="draft">Draft</option>
-          <option value="sent">Terkirim</option>
-          <option value="paid">Lunas</option>
+          <option value="draft">{t('draft')}</option>
+          <option value="sent">{t('sent')}</option>
+          <option value="paid">{t('paid')}</option>
         </select>
       </div>
 
       <div>
-        <h3 className="text-lg font-medium text-gray-700 mb-2">Item Invoice</h3>
+        <h3 className="text-lg font-medium text-gray-700 mb-2">{t('invoiceItems')}</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Deskripsi
+                  {t('description')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Jumlah
+                  {t('quantity')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Harga
+                  {t('price')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  PPN %
+                  {t('tax')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Total
+                  {t('total')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Aksi
+                  {t('action')}
                 </th>
               </tr>
             </thead>
@@ -323,7 +468,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
                       onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
                       required
                       className="w-full rounded-md border-gray-300 shadow-sm p-2 border"
-                      placeholder="Deskripsi item"
+                      placeholder={t('description')}
                     />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -341,9 +486,8 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
                       type="number"
                       value={item.price}
                       onChange={(e) => handleItemChange(item.id, 'price', parseFloat(e.target.value) || 0)}
-                      required
                       min="0"
-                      step="1000"
+                      required
                       className="w-full rounded-md border-gray-300 shadow-sm p-2 border"
                     />
                   </td>
@@ -353,8 +497,6 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
                       value={item.tax || 0}
                       onChange={(e) => handleItemChange(item.id, 'tax', parseFloat(e.target.value) || 0)}
                       min="0"
-                      max="100"
-                      step="0.1"
                       className="w-full rounded-md border-gray-300 shadow-sm p-2 border"
                     />
                   </td>
@@ -366,7 +508,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
                       type="button"
                       onClick={() => removeItem(item.id)}
                       className="text-red-600 hover:text-red-900"
-                      title="Hapus item"
+                      title={language === 'id' ? 'Hapus item' : 'Delete item'}
                     >
                       <Trash2 size={20} />
                     </button>
@@ -381,31 +523,31 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
           onClick={addItem}
           className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          <Plus size={16} className="mr-2" /> Tambah Item
+          <Plus size={16} className="mr-2" /> {t('addItem')}
         </button>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Bank Transfer</label>
+        <label className="block text-sm font-medium text-gray-700">{t('bankTransfer')}</label>
         <textarea
           name="notes"
           value={formData.notes}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
           rows={3}
-          placeholder="Catatan tambahan..."
+          placeholder={t('additionalNotes')}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Syarat & Ketentuan</label>
+        <label className="block text-sm font-medium text-gray-700">{t('termsConditions')}</label>
         <textarea
           name="terms"
           value={formData.terms}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
           rows={3}
-          placeholder="Syarat dan ketentuan pembayaran..."
+          placeholder={t('paymentTerms')}
         />
       </div>
 
@@ -414,7 +556,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
           type="submit"
           className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          <Save size={16} className="mr-2" /> Simpan Invoice
+          <Save size={16} className="mr-2" /> {t('saveInvoice')}
         </button>
       </div>
     </form>
