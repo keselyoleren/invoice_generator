@@ -92,12 +92,12 @@ const InvoicePreview = forwardRef(
               <tr key={item.id} className="border-b">
                 <td className="py-3 px-4 text-sm text-gray-800">{item.description}</td>
                 <td className="py-3 px-4 text-right text-sm text-gray-800">{item.quantity}</td>
-                <td className="py-3 px-4 text-right text-sm text-gray-800">{formatCurrency(item.price, 'usd')}</td>
+                <td className="py-3 px-4 text-right text-sm text-gray-800">{formatCurrency(item.price, 'idr')}</td>
                 <td className="py-3 px-4 text-right text-sm text-gray-800">
                   {item.tax ? `${item.tax}%` : '0%'}
                 </td>
                 <td className="py-3 px-4 text-right text-sm text-gray-800 font-medium">
-                  {formatCurrency(item.quantity * item.price, 'usd')}
+                  {formatCurrency(item.quantity * item.price, 'idr')}
                 </td>
               </tr>
             ))}
@@ -108,7 +108,7 @@ const InvoicePreview = forwardRef(
                 Subtotal:
               </td>
               <td className="py-3 px-4 text-right text-sm text-gray-800 font-medium">
-                {formatCurrency(invoice.subtotal, 'usd')}
+                {formatCurrency(invoice.subtotal, 'idr')}
               </td>
             </tr>
             <tr>
@@ -116,7 +116,7 @@ const InvoicePreview = forwardRef(
                 Tax:
               </td>
               <td className="py-3 px-4 text-right text-sm text-gray-800 font-medium">
-                {formatCurrency(invoice.taxTotal, 'usd')}
+                {formatCurrency(invoice.taxTotal, 'idr')}
               </td>
             </tr>
             <tr className="bg-gray-50">
@@ -124,7 +124,7 @@ const InvoicePreview = forwardRef(
                 Total:
               </td>
               <td className="py-3 px-4 text-right text-base text-gray-800 font-bold">
-                {formatCurrency(invoice.total, 'usd')}
+                {formatCurrency(invoice.total, 'idr')}
               </td>
             </tr>
           </tfoot>

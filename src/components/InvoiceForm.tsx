@@ -108,16 +108,16 @@ const translations: Translations = {
     en: 'Save Invoice',
     id: 'Simpan Invoice'
   },
-  draft: {
-    en: 'Draft',
-    id: 'Draft'
+  Dp: {
+    en: 'Dp',
+    id: 'Dp'
   },
-  sent: {
-    en: 'Sent',
-    id: 'Terkirim'
+  BelumTerbayar: {
+    en: 'Belum Terbayar',
+    id: 'Belum Terbayar'
   },
-  paid: {
-    en: 'Paid',
+  Lunas: {
+    en: 'Lunas',
     id: 'Lunas'
   },
   additionalNotes: {
@@ -174,7 +174,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
     ],
     notes: initialData?.notes || 'Transfer Bank: BCA No rek 4400136641 Atas Nama Rida Anggita Nurtrisna',
     terms: initialData?.terms || '',
-    status: initialData?.status || 'draft'
+    status: initialData?.status || 'Dp'
   });
 
   const handleBusinessChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -426,9 +426,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
         >
-          <option value="draft">{t('draft')}</option>
-          <option value="sent">{t('sent')}</option>
-          <option value="paid">{t('paid')}</option>
+          <option value="Dp">{t('Dp')}</option>
+          <option value="BelumTerbayar">{t('BelumTerbayar')}</option>
+          <option value="Lunas">{t('Lunas')}</option>
         </select>
       </div>
 

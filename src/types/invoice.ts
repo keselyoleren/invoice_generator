@@ -31,7 +31,7 @@ export interface Invoice {
   items: InvoiceItem[];
   notes?: string;
   terms?: string;
-  status: 'draft' | 'sent' | 'paid';
+  status: 'Dp' | 'Belum Terbayar' | 'Lunas';
   subtotal: number;
   taxTotal: number;
   total: number;
