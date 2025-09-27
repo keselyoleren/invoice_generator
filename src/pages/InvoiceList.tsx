@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useInvoices } from '../context/InvoiceContext';
 import { formatCurrency, formatDate } from '../utils/format';
-import { Plus, Edit, Trash2, FileText } from 'lucide-react';
+import { Plus, CreditCard as Edit, Trash2, FileText } from 'lucide-react';
 
 const InvoiceList: React.FC = () => {
   const navigate = useNavigate();
@@ -109,13 +109,3 @@ const InvoiceList: React.FC = () => {
 };
 
 export default InvoiceList;
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default CreateInvoice;
