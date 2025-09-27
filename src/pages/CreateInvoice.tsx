@@ -17,6 +17,7 @@ const translations = {
 const CreateInvoice: React.FC = () => {
   const navigate = useNavigate();
   const { createInvoice } = useInvoices();
+  const targetRef = useRef<HTMLDivElement>(null);
   const [previewInvoice, setPreviewInvoice] = useState<any>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<InvoiceTemplate>('modern');
   
