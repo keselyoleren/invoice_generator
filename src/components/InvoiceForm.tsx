@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { InvoiceFormData, InvoiceItem } from '../types/invoice';
 import { Plus, Trash2, Save } from 'lucide-react';
+import LogoUpload from './LogoUpload';
+import TemplateSelector, { InvoiceTemplate } from './TemplateSelector';
 
 interface InvoiceFormProps {
   initialData?: Partial<InvoiceFormData>;
   onSubmit: (data: InvoiceFormData) => void;
+  selectedTemplate: InvoiceTemplate;
+  onTemplateChange: (template: InvoiceTemplate) => void;
 }
 
 interface Translations {
@@ -130,7 +134,12 @@ const translations: Translations = {
   }
 };
 
-const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
+const InvoiceForm: React.FC<InvoiceFormProps> = ({ 
+  initialData, 
+  onSubmit, 
+  selectedTemplate, 
+  onTemplateChange 
+}) => {
   const [language, setLanguage] = useState<'en' | 'id'>('id');
   
   const t = (key: string) => translations[key]?.[language] || key;
@@ -241,6 +250,26 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
     }
   };
 
+  const handleLogoChange = (logoUrl: string) => {
+    setFormData({
+      ...formData,
+      business: {
+        ...formData.business,
+        logo: logoUrl
+      }
+    });
+  };
+
+  const handleLogoRemove = () => {
+    setFormData({
+      ...formData,
+      business: {
+        ...formData.business,
+        logo: ''
+      }
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -267,20 +296,21 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData, onSubmit }) => {
         </div>
       </div>
 
+      <TemplateSelector 
+        selectedTemplate={selectedTemplate}
+        onTemplateChange={onTemplateChange}
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-gray-700">{t('businessInfo')}</h3>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">{t('logoUrl')}</label>
-            <input
-              type="text"
-              name="logo"
-              value={formData.business.logo || ''}
-              onChange={handleBusinessChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-              placeholder="https://example.com/logo.png"
-            />
-          </div>
+          
+          <LogoUpload
+            currentLogo={formData.business.logo}
+            onLogoChange={handleLogoChange}
+            onLogoRemove={handleLogoRemove}
+          />
+          
           <div>
             <label className="block text-sm font-medium text-gray-700">{t('businessName')}</label>
             <input
