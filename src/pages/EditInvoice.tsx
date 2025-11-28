@@ -43,10 +43,16 @@ const EditInvoice: React.FC = () => {
     }
   }, [id, getInvoice, navigate]);
 
-  const handleSubmit = (data: InvoiceFormData) => {
+  const handleSubmit = async (data: InvoiceFormData) => {
     if (id) {
-      const updated = updateInvoice(id, data);
-      setPreviewInvoice(updated);
+      try {
+        const updated = await updateInvoice(id, data);
+        setPreviewInvoice(updated);
+        alert('Invoice updated successfully!');
+      } catch (error) {
+        console.error("Failed to update invoice", error);
+        alert("Failed to update invoice. Please try again.");
+      }
     }
   };
 
