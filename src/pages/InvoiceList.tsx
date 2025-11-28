@@ -1,12 +1,23 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useInvoices } from '../context/InvoiceContext';
+import { useAuth } from '../context/AuthContext';
 import { formatCurrency, formatDate } from '../utils/format';
-import { Plus, CreditCard as Edit, Trash2, FileText } from 'lucide-react';
+import { Plus, CreditCard as Edit, Trash2, FileText, LogOut } from 'lucide-react';
 
 const InvoiceList: React.FC = () => {
   const navigate = useNavigate();
-  const { invoices, deleteInvoice } = useInvoices();
+  const { invoices, deleteInvoice, loading } = useInvoices();
+  const { logout, user } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Failed to logout', error);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -19,26 +30,48 @@ const InvoiceList: React.FC = () => {
     }
   };
 
-  const handleDelete = (id: string, invoiceNumber: string) => {
+  const handleDelete = async (id: string, invoiceNumber: string) => {
     if (window.confirm(`Apakah Anda yakin ingin menghapus invoice ${invoiceNumber}?`)) {
-      deleteInvoice(id);
+      try {
+        await deleteInvoice(id);
+      } catch (error) {
+        console.error('Failed to delete invoice', error);
+        alert('Gagal menghapus invoice');
+      }
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Invoice Generator</h1>
-          <p className="text-gray-600 mt-2">Kelola semua invoice Anda dengan mudah</p>
+          <p className="text-gray-600 mt-2">Welcome, {user?.displayName}</p>
         </div>
-        <Link
-          to="/create"
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          <Plus size={16} className="mr-2" />
-          Buat Invoice Baru
-        </Link>
+        <div className="flex space-x-4">
+          <button
+            onClick={handleLogout}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <LogOut size={16} className="mr-2" />
+            Logout
+          </button>
+          <Link
+            to="/create"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <Plus size={16} className="mr-2" />
+            Buat Invoice Baru
+          </Link>
+        </div>
       </div>
 
       {invoices.length === 0 ? (

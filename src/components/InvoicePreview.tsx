@@ -26,67 +26,67 @@ const InvoicePreview = forwardRef(
         case 'modern':
           return {
             container: 'bg-white font-sans',
-            header: 'bg-slate-900 text-white px-6 py-12',
+            header: 'bg-slate-900 text-white px-8 py-8',
             headerContent: 'flex justify-between items-center',
-            subHeader: 'bg-slate-50 px-6 py-10 border-b border-slate-100',
-            content: 'px-6 py-12',
+            subHeader: 'bg-slate-50 px-8 py-6 border-b border-slate-100',
+            content: 'px-8 py-8',
             accent: 'text-slate-900',
             tableHeader: 'bg-slate-900 text-white',
             tableRow: 'border-b border-slate-100',
             totalSection: 'bg-slate-50',
-            footer: 'bg-slate-900 text-white px-6 py-8 text-center text-sm opacity-90'
+            footer: 'bg-slate-900 text-white px-8 py-6 text-center text-sm opacity-90'
           };
         case 'classic':
           return {
             container: 'bg-white font-serif',
-            header: 'bg-white px-6 py-12 border-b-2 border-gray-900',
+            header: 'bg-white px-8 py-8 border-b-2 border-gray-900',
             headerContent: 'flex flex-row-reverse justify-between items-start',
-            subHeader: 'px-6 py-10 border-b border-gray-200',
-            content: 'px-6 py-12',
+            subHeader: 'px-8 py-6 border-b border-gray-200',
+            content: 'px-8 py-8',
             accent: 'text-gray-900',
             tableHeader: 'bg-gray-100 text-gray-900 border-y-2 border-gray-900',
             tableRow: 'border-b border-gray-200',
             totalSection: 'bg-transparent',
-            footer: 'px-6 py-8 text-center border-t border-gray-200 text-gray-600'
+            footer: 'px-8 py-6 text-center border-t border-gray-200 text-gray-600'
           };
         case 'minimal':
           return {
             container: 'bg-white font-sans',
-            header: 'bg-white px-6 py-12',
+            header: 'bg-white px-8 py-8',
             headerContent: 'flex justify-between items-start',
-            subHeader: 'px-6 py-8',
-            content: 'px-6 py-12',
+            subHeader: 'px-8 py-6',
+            content: 'px-8 py-8',
             accent: 'text-black',
             tableHeader: 'border-b-2 border-black text-black bg-transparent',
             tableRow: 'border-b border-gray-100',
             totalSection: 'bg-transparent',
-            footer: 'px-6 py-12 text-center text-gray-500 text-sm'
+            footer: 'px-8 py-8 text-center text-gray-500 text-sm'
           };
         case 'professional':
           return {
             container: 'bg-white font-sans',
-            header: 'bg-blue-800 text-white px-6 py-12',
+            header: 'bg-blue-800 text-white px-8 py-8',
             headerContent: 'flex justify-between items-center',
-            subHeader: 'bg-blue-50 px-6 py-10 border-b border-blue-100',
-            content: 'px-6 py-12',
+            subHeader: 'bg-blue-50 px-8 py-6 border-b border-blue-100',
+            content: 'px-8 py-8',
             accent: 'text-blue-800',
             tableHeader: 'bg-blue-800 text-white',
             tableRow: 'border-b border-blue-50',
             totalSection: 'bg-blue-50',
-            footer: 'bg-blue-800 text-white px-6 py-8 text-center text-sm'
+            footer: 'bg-blue-800 text-white px-8 py-6 text-center text-sm'
           };
         default:
           return {
             container: 'bg-white font-sans',
-            header: 'bg-gray-900 text-white px-6 py-12',
+            header: 'bg-gray-900 text-white px-8 py-8',
             headerContent: 'flex justify-between items-center',
-            subHeader: 'bg-gray-50 px-6 py-10',
-            content: 'px-6 py-12',
+            subHeader: 'bg-gray-50 px-8 py-6',
+            content: 'px-8 py-8',
             accent: 'text-gray-900',
             tableHeader: 'bg-gray-100 text-gray-700',
             tableRow: 'border-b border-gray-100',
             totalSection: 'bg-gray-50',
-            footer: 'bg-gray-100 px-6 py-8 text-center text-gray-600'
+            footer: 'bg-gray-100 px-8 py-6 text-center text-gray-600'
           };
       }
     };
@@ -98,8 +98,7 @@ const InvoicePreview = forwardRef(
         ref={ref}
         className={`${styles.container} mx-auto`}
         style={{
-          width: '210mm',
-          minHeight: '297mm',
+          width: '100%',
           maxWidth: '100%',
           boxSizing: 'border-box'
         }}
@@ -112,25 +111,25 @@ const InvoicePreview = forwardRef(
                 <img
                   src={invoice.business.logo}
                   alt="Business Logo"
-                  className="h-24 w-auto object-contain mb-6 rounded-lg bg-white/10 p-2"
+                  className="h-16 w-auto object-contain mb-4 rounded-lg bg-white/10 p-1.5"
                   style={{
                     filter: (template === 'modern' || template === 'professional') ? 'brightness(0) invert(1)' : 'none'
                   }}
                 />
               )}
-              <h2 className={`text-3xl font-bold tracking-tight ${(template === 'modern' || template === 'professional') ? 'text-white' : styles.accent}`}>
+              <h2 className={`text-2xl font-bold tracking-tight ${(template === 'modern' || template === 'professional') ? 'text-white' : styles.accent}`}>
                 {invoice.business.name}
               </h2>
             </div>
             <div className="text-right">
-              <h1 className={`text-6xl font-extrabold tracking-tight ${(template === 'modern' || template === 'professional') ? 'text-white' : styles.accent}`}>
+              <h1 className={`text-5xl font-extrabold tracking-tight ${(template === 'modern' || template === 'professional') ? 'text-white' : styles.accent}`}>
                 INVOICE
               </h1>
-              <p className={`mt-2 text-xl font-medium ${(template === 'modern' || template === 'professional') ? 'text-white/80' : 'text-gray-500'}`}>
+              <p className={`mt-1 text-lg font-medium ${(template === 'modern' || template === 'professional') ? 'text-white/80' : 'text-gray-500'}`}>
                 #{invoice.invoiceNumber}
               </p>
-              <div className="mt-6">
-                <span className={`inline-block px-4 py-1.5 rounded-full text-sm font-bold tracking-wide uppercase shadow-sm ${getStatusColor()}`}>
+              <div className="mt-4">
+                <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase shadow-sm ${getStatusColor()}`}>
                   {invoice.status}
                 </span>
               </div>
@@ -140,12 +139,12 @@ const InvoicePreview = forwardRef(
 
         {/* Info Grid */}
         <div className={styles.subHeader}>
-          <div className="grid grid-cols-3 gap-12">
+          <div className="grid grid-cols-3 gap-8">
             {/* From */}
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">From</h3>
-              <div className="text-gray-700 text-sm leading-relaxed space-y-1">
-                <p className="font-bold text-gray-900 text-base">{invoice.business.name}</p>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">From</h3>
+              <div className="text-gray-700 text-xs leading-relaxed space-y-0.5">
+                <p className="font-bold text-gray-900 text-sm">{invoice.business.name}</p>
                 <p>{invoice.business.email}</p>
                 <p className="whitespace-pre-line">{invoice.business.address}</p>
                 {invoice.business.phone && <p>{invoice.business.phone}</p>}
@@ -154,9 +153,9 @@ const InvoicePreview = forwardRef(
 
             {/* To */}
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Bill To</h3>
-              <div className="text-gray-700 text-sm leading-relaxed space-y-1">
-                <p className="font-bold text-gray-900 text-base">{invoice.customer.name}</p>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Bill To</h3>
+              <div className="text-gray-700 text-xs leading-relaxed space-y-0.5">
+                <p className="font-bold text-gray-900 text-sm">{invoice.customer.name}</p>
                 <p>{invoice.customer.email}</p>
                 <p className="whitespace-pre-line">{invoice.customer.address}</p>
                 {invoice.customer.phone && <p>{invoice.customer.phone}</p>}
@@ -165,15 +164,15 @@ const InvoicePreview = forwardRef(
 
             {/* Dates */}
             <div className="text-right">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Dates</h3>
-              <div className="space-y-4">
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Dates</h3>
+              <div className="space-y-2">
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Invoice Date</p>
-                  <p className="font-bold text-gray-900 text-lg">{formatDate(invoice.date)}</p>
+                  <p className="text-[10px] text-gray-500">Invoice Date</p>
+                  <p className="font-bold text-gray-900 text-sm">{formatDate(invoice.date)}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Due Date</p>
-                  <p className="font-bold text-gray-900 text-lg">{formatDate(invoice.dueDate)}</p>
+                  <p className="text-[10px] text-gray-500">Due Date</p>
+                  <p className="font-bold text-gray-900 text-sm">{formatDate(invoice.dueDate)}</p>
                 </div>
               </div>
             </div>
@@ -183,27 +182,27 @@ const InvoicePreview = forwardRef(
         {/* Content */}
         <div className={styles.content}>
           {/* Items Table */}
-          <div className="mb-12">
+          <div className="mb-8">
             <table className="w-full border-collapse">
               <thead>
                 <tr className={styles.tableHeader}>
-                  <th className="py-4 px-6 text-left text-xs font-bold uppercase tracking-wider w-1/2 rounded-tl-lg rounded-bl-lg">Description</th>
-                  <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider w-24">Qty</th>
-                  <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider w-32">Price</th>
-                  <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider w-24">Tax</th>
-                  <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider w-32 rounded-tr-lg rounded-br-lg">Amount</th>
+                  <th className="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider w-1/2 rounded-tl-lg rounded-bl-lg">Description</th>
+                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-24">Qty</th>
+                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-32">Price</th>
+                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-24">Tax</th>
+                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-32 rounded-tr-lg rounded-br-lg">Amount</th>
                 </tr>
               </thead>
               <tbody className="bg-white">
                 {invoice.items.map((item) => (
                   <tr key={item.id} className={styles.tableRow}>
-                    <td className="py-5 px-6 text-sm text-gray-900 font-medium">{item.description}</td>
-                    <td className="py-5 px-6 text-right text-sm text-gray-600 font-medium">{item.quantity}</td>
-                    <td className="py-5 px-6 text-right text-sm text-gray-600 font-medium">{formatCurrency(item.price, 'idr')}</td>
-                    <td className="py-5 px-6 text-right text-sm text-gray-600 font-medium">
+                    <td className="py-4 px-4 text-sm text-gray-900 font-medium">{item.description}</td>
+                    <td className="py-4 px-4 text-right text-sm text-gray-600 font-medium">{item.quantity}</td>
+                    <td className="py-4 px-4 text-right text-sm text-gray-600 font-medium">{formatCurrency(item.price, 'idr')}</td>
+                    <td className="py-4 px-4 text-right text-sm text-gray-600 font-medium">
                       {item.tax ? `${item.tax}%` : '-'}
                     </td>
-                    <td className="py-5 px-6 text-right text-sm font-bold text-gray-900">
+                    <td className="py-4 px-4 text-right text-sm font-bold text-gray-900">
                       {formatCurrency(item.quantity * item.price, 'idr')}
                     </td>
                   </tr>
@@ -213,22 +212,22 @@ const InvoicePreview = forwardRef(
           </div>
 
           {/* Totals & Notes */}
-          <div className="grid grid-cols-12 gap-12">
+          <div className="grid grid-cols-12 gap-8">
             <div className="col-span-7">
               {(invoice.notes || invoice.terms) && (
-                <div className="space-y-8">
+                <div className="space-y-6">
                   {invoice.notes && (
                     <div>
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Payment Info / Notes</h3>
-                      <p className="text-sm text-gray-600 whitespace-pre-line bg-gray-50 p-6 rounded-xl border border-gray-100 leading-relaxed">
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Payment Info / Notes</h3>
+                      <p className="text-xs text-gray-600 whitespace-pre-line bg-gray-50 p-4 rounded-lg border border-gray-100 leading-relaxed">
                         {invoice.notes}
                       </p>
                     </div>
                   )}
                   {invoice.terms && (
                     <div>
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Terms & Conditions</h3>
-                      <p className="text-xs text-gray-500 whitespace-pre-line leading-relaxed">
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Terms & Conditions</h3>
+                      <p className="text-[10px] text-gray-500 whitespace-pre-line leading-relaxed">
                         {invoice.terms}
                       </p>
                     </div>
@@ -238,8 +237,8 @@ const InvoicePreview = forwardRef(
             </div>
 
             <div className="col-span-5">
-              <div className={`rounded-xl p-8 ${styles.totalSection}`}>
-                <div className="space-y-4">
+              <div className={`rounded-xl p-6 ${styles.totalSection}`}>
+                <div className="space-y-3">
                   <div className="flex justify-between text-sm text-gray-600">
                     <span className="font-medium">Subtotal</span>
                     <span className="font-bold text-gray-900">{formatCurrency(invoice.subtotal, 'idr')}</span>
@@ -248,7 +247,7 @@ const InvoicePreview = forwardRef(
                     <span className="font-medium">Tax Total</span>
                     <span className="font-bold text-gray-900">{formatCurrency(invoice.taxTotal, 'idr')}</span>
                   </div>
-                  <div className="pt-6 border-t border-gray-200 flex justify-between items-center">
+                  <div className="pt-4 border-t border-gray-200 flex justify-between items-center">
                     <span className="text-lg font-bold text-gray-900">Total</span>
                     <span className={`text-xl font-extrabold ${styles.accent}`}>
                       {formatCurrency(invoice.total, 'idr')}
@@ -262,8 +261,8 @@ const InvoicePreview = forwardRef(
 
         {/* Footer */}
         <div className={styles.footer}>
-          <p className="font-bold text-lg">{invoice.business.name}</p>
-          <p className="mt-2 opacity-75 font-medium">Thank you for your business!</p>
+          <p className="font-bold text-base">{invoice.business.name}</p>
+          <p className="mt-1 opacity-75 font-medium text-xs">Thank you for your business!</p>
         </div>
       </div>
     );

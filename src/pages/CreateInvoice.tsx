@@ -31,9 +31,16 @@ const CreateInvoice: React.FC = () => {
 
   });
 
-  const handleSubmit = (data: InvoiceFormData) => {
-    const newInvoice = createInvoice(data);
-    setPreviewInvoice(newInvoice);
+  const handleSubmit = async (data: InvoiceFormData) => {
+    try {
+      const newInvoice = await createInvoice(data); // Assuming createInvoice is now async
+      setPreviewInvoice(newInvoice);
+      // If the intent was to navigate after creation, it would go here:
+      // navigate('/');
+    } catch (error) {
+      console.error("Failed to create invoice", error);
+      alert("Failed to create invoice. Please try again.");
+    }
   };
 
   const handleDownloadPDF = () => {
