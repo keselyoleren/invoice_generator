@@ -6,6 +6,7 @@ import { useInvoices } from '../context/InvoiceContext';
 import { InvoiceFormData } from '../types/invoice';
 import { Download, ArrowLeft } from 'lucide-react';
 import { usePDF } from 'react-to-pdf';
+import { InvoiceTemplate } from '../components/TemplateSelector';
 
 
 
@@ -14,16 +15,21 @@ const EditInvoice: React.FC = () => {
   const navigate = useNavigate();
   const { getInvoice, updateInvoice } = useInvoices();
   const [previewInvoice, setPreviewInvoice] = useState<any>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<InvoiceTemplate>('modern');
+
+
   const { toPDF, targetRef } = usePDF({
-    filename: 'invoice_edit.pdf',
+    filename: `invoice-${previewInvoice?.invoiceNumber || 'edit'}.pdf`,
     page: {
+      format: 'A4',
       margin: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0
+        top: 15,
+        right: 15,
+        bottom: 15,
+        left: 15
       },
     },
+
   });
 
   useEffect(() => {
@@ -76,12 +82,18 @@ const EditInvoice: React.FC = () => {
           <InvoiceForm
             initialData={previewInvoice}
             onSubmit={handleSubmit}
+            selectedTemplate={selectedTemplate}
+            onTemplateChange={setSelectedTemplate}
           />
         </div>
 
         <div className="overflow-y-auto pb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Preview</h1>
-          <InvoicePreview ref={targetRef} invoice={previewInvoice} />
+          <InvoicePreview
+            ref={targetRef}
+            invoice={previewInvoice}
+            template={selectedTemplate}
+          />
         </div>
       </div>
     </div>
