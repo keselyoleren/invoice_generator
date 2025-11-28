@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoicePreview from '../components/InvoicePreview';
@@ -7,32 +7,25 @@ import { InvoiceFormData } from '../types/invoice';
 import { Download, ArrowLeft } from 'lucide-react';
 import { usePDF } from 'react-to-pdf';
 
-const translations = {
-  en: {
-    invoice: 'Invoice'
-  }
-};
+
 
 const CreateInvoice: React.FC = () => {
   const navigate = useNavigate();
   const { createInvoice } = useInvoices();
   const [previewInvoice, setPreviewInvoice] = useState<any>(null);
 
-  const { toPDF, targetRef } = usePDF({ 
+  const { toPDF, targetRef } = usePDF({
     filename: 'invoice.pdf',
     page: {
       format: 'A4',
       margin: {
-        top: 15, 
+        top: 15,
         right: 15,
         bottom: 15,
         left: 15
       },
     },
-    canvas: {
-      mobileOptimization: false,
-      scale: 1,
-    }
+
   });
 
   const handleSubmit = (data: InvoiceFormData) => {
@@ -64,7 +57,7 @@ const CreateInvoice: React.FC = () => {
         >
           <ArrowLeft size={16} className="mr-2" /> Back to Invoices
         </button>
-        
+
         {previewInvoice && (
           <button
             onClick={handleDownloadPDF}
@@ -81,13 +74,13 @@ const CreateInvoice: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Create New Invoice</h1>
           <InvoiceForm onSubmit={handleSubmit} />
         </div>
-        
+
         <div className="overflow-y-auto pb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Preview</h1>
           <div className="pdf-container">
             {previewInvoice ? (
               <div ref={targetRef} className="bg-white shadow-md overflow-hidden">
-                <InvoicePreview invoice={previewInvoice} translations={translations} />
+                <InvoicePreview invoice={previewInvoice} />
               </div>
             ) : (
               <div className="bg-white p-8 rounded-lg shadow-md text-center">

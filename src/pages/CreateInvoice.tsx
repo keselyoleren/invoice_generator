@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoicePreview from '../components/InvoicePreview';
@@ -7,27 +7,23 @@ import { InvoiceFormData } from '../types/invoice';
 import { Download, ArrowLeft } from 'lucide-react';
 import { usePDF } from 'react-to-pdf';
 
-const translations = {
-  en: {
-    invoice: 'Invoice'
-  }
-};
+
 
 const CreateInvoice: React.FC = () => {
   const navigate = useNavigate();
   const { createInvoice } = useInvoices();
   const [previewInvoice, setPreviewInvoice] = useState<any>(null);
-  const { toPDF } = usePDF({ 
-        filename: 'rename.pdf',
-        page: {      
-          margin: {
-            top: 0, 
-            right: 0,
-            bottom: 0,
-            left: 0
-          },
-        }
-      });
+  const { toPDF, targetRef } = usePDF({
+    filename: 'rename.pdf',
+    page: {
+      margin: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      },
+    }
+  });
 
   const handleSubmit = (data: InvoiceFormData) => {
     const newInvoice = createInvoice(data);
@@ -58,7 +54,7 @@ const CreateInvoice: React.FC = () => {
         >
           <ArrowLeft size={16} className="mr-2" /> Back to Invoices
         </button>
-        
+
         {previewInvoice && (
           <button
             onClick={handleDownloadPDF}
@@ -75,12 +71,12 @@ const CreateInvoice: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Create New Invoice</h1>
           <InvoiceForm onSubmit={handleSubmit} />
         </div>
-        
+
         <div className="overflow-y-auto pb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Preview</h1>
           <div ref={targetRef}>
             {previewInvoice ? (
-              <InvoicePreview invoice={previewInvoice} translations={translations} />
+              <InvoicePreview invoice={previewInvoice} />
             ) : (
               <div className="bg-white p-8 rounded-lg shadow-md text-center">
                 <p className="text-gray-500">Fill out the form to see a preview of your invoice</p>

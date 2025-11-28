@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoicePreview from '../components/InvoicePreview';
@@ -7,28 +7,23 @@ import { InvoiceFormData } from '../types/invoice';
 import { Download, ArrowLeft } from 'lucide-react';
 import { usePDF } from 'react-to-pdf';
 
-const translations = {
-  en: {
-    invoice: 'Invoice'
-  }
-};
+
 
 const EditInvoice: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { getInvoice, updateInvoice } = useInvoices();
   const [previewInvoice, setPreviewInvoice] = useState<any>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
-  const { toPDF } = usePDF({ 
-      filename: 'invoice_edit.pdf',
-      page: {      
-        margin: {
-          top: 0, 
-          right: 0,
-          bottom: 0,
-          left: 0
-        },
-    },    
+  const { toPDF, targetRef } = usePDF({
+    filename: 'invoice_edit.pdf',
+    page: {
+      margin: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      },
+    },
   });
 
   useEffect(() => {
@@ -50,9 +45,7 @@ const EditInvoice: React.FC = () => {
   };
 
   const handleDownloadPDF = () => {
-    if (previewRef.current) {
-      toPDF(previewRef);
-    }
+    toPDF();
   };
 
   if (!previewInvoice) {
@@ -68,7 +61,7 @@ const EditInvoice: React.FC = () => {
         >
           <ArrowLeft size={16} className="mr-2" /> Back to Invoices
         </button>
-        
+
         <button
           onClick={handleDownloadPDF}
           className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
@@ -80,15 +73,15 @@ const EditInvoice: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="overflow-y-auto pb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Edit Invoice</h1>
-          <InvoiceForm 
-            initialData={previewInvoice} 
-            onSubmit={handleSubmit} 
+          <InvoiceForm
+            initialData={previewInvoice}
+            onSubmit={handleSubmit}
           />
         </div>
-        
+
         <div className="overflow-y-auto pb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Preview</h1>
-          <InvoicePreview ref={previewRef} invoice={previewInvoice} translations={translations} />
+          <InvoicePreview ref={targetRef} invoice={previewInvoice} />
         </div>
       </div>
     </div>
