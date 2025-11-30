@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useInvoices } from '../context/InvoiceContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { formatCurrency, formatDate } from '../utils/format';
 import { Plus, CreditCard as Edit, Trash2, FileText, LogOut } from 'lucide-react';
 
@@ -9,6 +10,8 @@ const InvoiceList: React.FC = () => {
   const navigate = useNavigate();
   const { invoices, deleteInvoice, loading } = useInvoices();
   const { logout, user } = useAuth();
+  const { showToast } = useToast();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleLogout = async () => {
     try {
@@ -32,11 +35,15 @@ const InvoiceList: React.FC = () => {
 
   const handleDelete = async (id: string, invoiceNumber: string) => {
     if (window.confirm(`Apakah Anda yakin ingin menghapus invoice ${invoiceNumber}?`)) {
+      setDeletingId(id);
       try {
         await deleteInvoice(id);
+        showToast('Invoice berhasil dihapus', 'success');
       } catch (error) {
         console.error('Failed to delete invoice', error);
-        alert('Gagal menghapus invoice');
+        showToast('Gagal menghapus invoice', 'error');
+      } finally {
+        setDeletingId(null);
       }
     }
   };
@@ -126,9 +133,14 @@ const InvoiceList: React.FC = () => {
                     </Link>
                     <button
                       onClick={() => handleDelete(invoice.id, invoice.invoiceNumber)}
-                      className="inline-flex items-center p-2 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50"
+                      disabled={deletingId === invoice.id}
+                      className="inline-flex items-center p-2 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Trash2 size={16} />
+                      {deletingId === invoice.id ? (
+                        <div className="animate-spin h-4 w-4 border-b-2 border-red-700 rounded-full"></div>
+                      ) : (
+                        <Trash2 size={16} />
+                      )}
                     </button>
                   </div>
                 </div>

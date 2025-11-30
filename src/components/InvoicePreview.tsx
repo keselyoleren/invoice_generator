@@ -93,10 +93,58 @@ const InvoicePreview = forwardRef(
 
     const styles = getTemplateStyles();
 
+    const labels = {
+      en: {
+        invoice: 'INVOICE',
+        from: 'From',
+        billTo: 'Bill To',
+        dates: 'Dates',
+        invoiceDate: 'Invoice Date',
+        dueDate: 'Due Date',
+        description: 'Description',
+        qty: 'Qty',
+        price: 'Price',
+        tax: 'Tax',
+        amount: 'Amount',
+        paymentInfo: 'Payment Info / Notes',
+        terms: 'Terms & Conditions',
+        subtotal: 'Subtotal',
+        taxTotal: 'Tax Total',
+        total: 'Total',
+        downPayment: 'Down Payment',
+        balanceDue: 'Balance Due',
+        thankYou: 'Thank you for your business!'
+      },
+      id: {
+        invoice: 'FAKTUR',
+        from: 'Dari',
+        billTo: 'Tagihan Kepada',
+        dates: 'Tanggal',
+        invoiceDate: 'Tanggal Faktur',
+        dueDate: 'Jatuh Tempo',
+        description: 'Deskripsi',
+        qty: 'Jml',
+        price: 'Harga',
+        tax: 'Pajak',
+        amount: 'Jumlah',
+        paymentInfo: 'Info Pembayaran / Catatan',
+        terms: 'Syarat & Ketentuan',
+        subtotal: 'Subtotal',
+        taxTotal: 'Total Pajak',
+        total: 'Total',
+        downPayment: 'Uang Muka',
+        balanceDue: 'Sisa Tagihan',
+        thankYou: 'Terima kasih atas kepercayaan Anda!'
+      }
+    };
+
+    const t = labels[invoice.language || 'id'];
+    const currency = invoice.currency || 'idr';
+
     return (
       <div
         ref={ref}
-        className={`${styles.container} mx-auto`}
+        className={`${styles.container} mx-auto shadow-lg`}
         style={{
           width: '100%',
           maxWidth: '100%',
@@ -123,7 +171,7 @@ const InvoicePreview = forwardRef(
             </div>
             <div className="text-right">
               <h1 className={`text-5xl font-extrabold tracking-tight ${(template === 'modern' || template === 'professional') ? 'text-white' : styles.accent}`}>
-                INVOICE
+                {t.invoice}
               </h1>
               <p className={`mt-1 text-lg font-medium ${(template === 'modern' || template === 'professional') ? 'text-white/80' : 'text-gray-500'}`}>
                 #{invoice.invoiceNumber}
@@ -142,7 +190,7 @@ const InvoicePreview = forwardRef(
           <div className="grid grid-cols-3 gap-8">
             {/* From */}
             <div>
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">From</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t.from}</h3>
               <div className="text-gray-700 text-xs leading-relaxed space-y-0.5">
                 <p className="font-bold text-gray-900 text-sm">{invoice.business.name}</p>
                 <p>{invoice.business.email}</p>
@@ -153,7 +201,7 @@ const InvoicePreview = forwardRef(
 
             {/* To */}
             <div>
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Bill To</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t.billTo}</h3>
               <div className="text-gray-700 text-xs leading-relaxed space-y-0.5">
                 <p className="font-bold text-gray-900 text-sm">{invoice.customer.name}</p>
                 <p>{invoice.customer.email}</p>
@@ -164,15 +212,15 @@ const InvoicePreview = forwardRef(
 
             {/* Dates */}
             <div className="text-right">
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Dates</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t.dates}</h3>
               <div className="space-y-2">
                 <div>
-                  <p className="text-[10px] text-gray-500">Invoice Date</p>
-                  <p className="font-bold text-gray-900 text-sm">{formatDate(invoice.date)}</p>
+                  <p className="text-[10px] text-gray-500">{t.invoiceDate}</p>
+                  <p className="font-bold text-gray-900 text-sm">{formatDate(invoice.date, invoice.language)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-500">Due Date</p>
-                  <p className="font-bold text-gray-900 text-sm">{formatDate(invoice.dueDate)}</p>
+                  <p className="text-[10px] text-gray-500">{t.dueDate}</p>
+                  <p className="font-bold text-gray-900 text-sm">{formatDate(invoice.dueDate, invoice.language)}</p>
                 </div>
               </div>
             </div>
@@ -186,11 +234,11 @@ const InvoicePreview = forwardRef(
             <table className="w-full border-collapse">
               <thead>
                 <tr className={styles.tableHeader}>
-                  <th className="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider w-1/2 rounded-tl-lg rounded-bl-lg">Description</th>
-                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-24">Qty</th>
-                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-32">Price</th>
-                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-24">Tax</th>
-                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-32 rounded-tr-lg rounded-br-lg">Amount</th>
+                  <th className="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider w-1/2 rounded-tl-lg rounded-bl-lg">{t.description}</th>
+                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-24">{t.qty}</th>
+                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-32">{t.price}</th>
+                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-24">{t.tax}</th>
+                  <th className="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider w-32 rounded-tr-lg rounded-br-lg">{t.amount}</th>
                 </tr>
               </thead>
               <tbody className="bg-white">
@@ -198,12 +246,12 @@ const InvoicePreview = forwardRef(
                   <tr key={item.id} className={styles.tableRow}>
                     <td className="py-4 px-4 text-sm text-gray-900 font-medium">{item.description}</td>
                     <td className="py-4 px-4 text-right text-sm text-gray-600 font-medium">{item.quantity}</td>
-                    <td className="py-4 px-4 text-right text-sm text-gray-600 font-medium">{formatCurrency(item.price, 'idr')}</td>
+                    <td className="py-4 px-4 text-right text-sm text-gray-600 font-medium">{formatCurrency(item.price, currency)}</td>
                     <td className="py-4 px-4 text-right text-sm text-gray-600 font-medium">
                       {item.tax ? `${item.tax}%` : '-'}
                     </td>
                     <td className="py-4 px-4 text-right text-sm font-bold text-gray-900">
-                      {formatCurrency(item.quantity * item.price, 'idr')}
+                      {formatCurrency(item.quantity * item.price, currency)}
                     </td>
                   </tr>
                 ))}
@@ -218,7 +266,7 @@ const InvoicePreview = forwardRef(
                 <div className="space-y-6">
                   {invoice.notes && (
                     <div>
-                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Payment Info / Notes</h3>
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t.paymentInfo}</h3>
                       <p className="text-xs text-gray-600 whitespace-pre-line bg-gray-50 p-4 rounded-lg border border-gray-100 leading-relaxed">
                         {invoice.notes}
                       </p>
@@ -226,7 +274,7 @@ const InvoicePreview = forwardRef(
                   )}
                   {invoice.terms && (
                     <div>
-                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Terms & Conditions</h3>
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t.terms}</h3>
                       <p className="text-[10px] text-gray-500 whitespace-pre-line leading-relaxed">
                         {invoice.terms}
                       </p>
@@ -240,29 +288,29 @@ const InvoicePreview = forwardRef(
               <div className={`rounded-xl p-6 ${styles.totalSection}`}>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm text-gray-600">
-                    <span className="font-medium">Subtotal</span>
-                    <span className="font-bold text-gray-900">{formatCurrency(invoice.subtotal, 'idr')}</span>
+                    <span className="font-medium">{t.subtotal}</span>
+                    <span className="font-bold text-gray-900">{formatCurrency(invoice.subtotal, currency)}</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
-                    <span className="font-medium">Tax Total</span>
-                    <span className="font-bold text-gray-900">{formatCurrency(invoice.taxTotal, 'idr')}</span>
+                    <span className="font-medium">{t.taxTotal}</span>
+                    <span className="font-bold text-gray-900">{formatCurrency(invoice.taxTotal, currency)}</span>
                   </div>
                   <div className="pt-4 border-t border-gray-200 flex justify-between items-center">
-                    <span className="text-lg font-bold text-gray-900">Total</span>
+                    <span className="text-lg font-bold text-gray-900">{t.total}</span>
                     <span className={`text-xl font-extrabold ${styles.accent}`}>
-                      {formatCurrency(invoice.total, 'idr')}
+                      {formatCurrency(invoice.total, currency)}
                     </span>
                   </div>
                   {invoice.downPaymentAmount !== undefined && invoice.downPaymentAmount > 0 && (
                     <>
                       <div className="flex justify-between text-sm text-gray-600">
-                        <span className="font-medium">Down Payment ({invoice.downPaymentPercentage}%)</span>
-                        <span className="font-bold text-gray-900">{formatCurrency(invoice.downPaymentAmount, 'idr')}</span>
+                        <span className="font-medium">{t.downPayment} ({invoice.downPaymentPercentage}%)</span>
+                        <span className="font-bold text-gray-900">{formatCurrency(invoice.downPaymentAmount, currency)}</span>
                       </div>
                       <div className="pt-4 border-t border-gray-200 flex justify-between items-center">
-                        <span className="text-lg font-bold text-gray-900">Balance Due</span>
+                        <span className="text-lg font-bold text-gray-900">{t.balanceDue}</span>
                         <span className={`text-xl font-extrabold ${styles.accent}`}>
-                          {formatCurrency(invoice.balanceDue || 0, 'idr')}
+                          {formatCurrency(invoice.balanceDue || 0, currency)}
                         </span>
                       </div>
                     </>
@@ -276,7 +324,7 @@ const InvoicePreview = forwardRef(
         {/* Footer */}
         <div className={styles.footer}>
           <p className="font-bold text-base">{invoice.business.name}</p>
-          <p className="mt-1 opacity-75 font-medium text-xs">Thank you for your business!</p>
+          <p className="mt-1 opacity-75 font-medium text-xs">{t.thankYou}</p>
         </div>
       </div>
     );

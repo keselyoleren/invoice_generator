@@ -38,6 +38,8 @@ export interface Invoice {
   downPaymentPercentage?: number;
   downPaymentAmount?: number;
   balanceDue?: number;
+  currency: 'idr' | 'usd';
+  language: 'id' | 'en';
   createdAt: string;
 }
 
