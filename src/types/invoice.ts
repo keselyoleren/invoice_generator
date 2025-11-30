@@ -35,7 +35,10 @@ export interface Invoice {
   subtotal: number;
   taxTotal: number;
   total: number;
+  downPaymentPercentage?: number;
+  downPaymentAmount?: number;
+  balanceDue?: number;
   createdAt: string;
 }
 
-export type InvoiceFormData = Omit<Invoice, 'id' | 'subtotal' | 'taxTotal' | 'total' | 'createdAt'>;
+export type InvoiceFormData = Omit<Invoice, 'id' | 'subtotal' | 'taxTotal' | 'total' | 'downPaymentAmount' | 'balanceDue' | 'createdAt'>;

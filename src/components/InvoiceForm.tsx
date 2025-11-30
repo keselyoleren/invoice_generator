@@ -131,17 +131,21 @@ const translations: Translations = {
   paymentTerms: {
     en: 'Payment terms and conditions...',
     id: 'Syarat dan ketentuan pembayaran...'
+  },
+  downPayment: {
+    en: 'Down Payment %',
+    id: 'Uang Muka %'
   }
 };
 
-const InvoiceForm: React.FC<InvoiceFormProps> = ({ 
-  initialData, 
-  onSubmit, 
-  selectedTemplate, 
-  onTemplateChange 
+const InvoiceForm: React.FC<InvoiceFormProps> = ({
+  initialData,
+  onSubmit,
+  selectedTemplate,
+  onTemplateChange
 }) => {
   const [language, setLanguage] = useState<'en' | 'id'>('id');
-  
+
   const t = (key: string) => translations[key]?.[language] || key;
 
   const getCurrentDate = () => {
@@ -183,7 +187,8 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
     ],
     notes: initialData?.notes || 'Transfer Bank: BCA No rek 4400136641 Atas Nama Rida Anggita Nurtrisna',
     terms: initialData?.terms || '',
-    status: initialData?.status || 'Dp'
+    status: initialData?.status || 'Dp',
+    downPaymentPercentage: initialData?.downPaymentPercentage || 0
   });
 
   const handleBusinessChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -296,7 +301,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
         </div>
       </div>
 
-      <TemplateSelector 
+      <TemplateSelector
         selectedTemplate={selectedTemplate}
         onTemplateChange={onTemplateChange}
       />
@@ -304,13 +309,13 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-gray-700">{t('businessInfo')}</h3>
-          
+
           <LogoUpload
             currentLogo={formData.business.logo}
             onLogoChange={handleLogoChange}
             onLogoRemove={handleLogoRemove}
           />
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700">{t('businessName')}</label>
             <input
@@ -461,6 +466,21 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
           <option value="Lunas">{t('Lunas')}</option>
         </select>
       </div>
+
+      {formData.status === 'Dp' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">{t('downPayment')}</label>
+          <input
+            type="number"
+            name="downPaymentPercentage"
+            value={formData.downPaymentPercentage}
+            onChange={handleChange}
+            min="0"
+            max="100"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+          />
+        </div>
+      )}
 
       <div>
         <h3 className="text-lg font-medium text-gray-700 mb-2">{t('invoiceItems')}</h3>

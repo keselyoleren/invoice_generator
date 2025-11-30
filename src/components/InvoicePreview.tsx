@@ -253,6 +253,20 @@ const InvoicePreview = forwardRef(
                       {formatCurrency(invoice.total, 'idr')}
                     </span>
                   </div>
+                  {invoice.downPaymentAmount !== undefined && invoice.downPaymentAmount > 0 && (
+                    <>
+                      <div className="flex justify-between text-sm text-gray-600">
+                        <span className="font-medium">Down Payment ({invoice.downPaymentPercentage}%)</span>
+                        <span className="font-bold text-gray-900">{formatCurrency(invoice.downPaymentAmount, 'idr')}</span>
+                      </div>
+                      <div className="pt-4 border-t border-gray-200 flex justify-between items-center">
+                        <span className="text-lg font-bold text-gray-900">Balance Due</span>
+                        <span className={`text-xl font-extrabold ${styles.accent}`}>
+                          {formatCurrency(invoice.balanceDue || 0, 'idr')}
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
