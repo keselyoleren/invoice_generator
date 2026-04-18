@@ -21,6 +21,10 @@ export interface InvoiceItem {
   tax?: number;
 }
 
+export type InvoiceStatus = 'Dp' | 'Belum Terbayar' | 'Lunas';
+export type InvoiceType = 'full' | 'dp' | 'pelunasan';
+export type DownPaymentMode = 'percentage' | 'amount';
+
 export interface Invoice {
   id: string;
   invoiceNumber: string;
@@ -31,16 +35,20 @@ export interface Invoice {
   items: InvoiceItem[];
   notes?: string;
   terms?: string;
-  status: 'Dp' | 'Belum Terbayar' | 'Lunas';
+  status: InvoiceStatus;
   subtotal: number;
   taxTotal: number;
   total: number;
+  downPaymentMode?: DownPaymentMode;
   downPaymentPercentage?: number;
   downPaymentAmount?: number;
   balanceDue?: number;
+  invoiceType?: InvoiceType;
+  parentInvoiceId?: string;
+  parentInvoiceNumber?: string;
   currency: 'idr' | 'usd';
   language: 'id' | 'en';
   createdAt: string;
 }
 
-export type InvoiceFormData = Omit<Invoice, 'id' | 'subtotal' | 'taxTotal' | 'total' | 'downPaymentAmount' | 'balanceDue' | 'createdAt'>;
+export type InvoiceFormData = Omit<Invoice, 'id' | 'subtotal' | 'taxTotal' | 'total' | 'balanceDue' | 'createdAt'>;

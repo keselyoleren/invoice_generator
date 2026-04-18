@@ -84,7 +84,14 @@ export const InvoiceProvider: React.FC<InvoiceProviderProps> = ({ children }) =>
     return () => unsubscribe();
   }, [userId]);
 
-  const calculateTotals = (data: InvoiceFormData): { subtotal: number; taxTotal: number; total: number; downPaymentAmount: number; balanceDue: number } => {
+  const calculateTotals = (data: InvoiceFormData): {
+    subtotal: number;
+    taxTotal: number;
+    total: number;
+    downPaymentPercentage: number;
+    downPaymentAmount: number;
+    balanceDue: number;
+  } => {
     const subtotal = data.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
     const taxTotal = data.items.reduce((sum, item) => {
       const itemTotal = item.quantity * item.price;
@@ -92,14 +99,29 @@ export const InvoiceProvider: React.FC<InvoiceProviderProps> = ({ children }) =>
     }, 0);
     const total = subtotal + taxTotal;
 
-    const downPaymentPercentage = data.downPaymentPercentage || 0;
-    const downPaymentAmount = (total * downPaymentPercentage) / 100;
-    const balanceDue = total - downPaymentAmount;
+    let downPaymentPercentage = data.downPaymentPercentage || 0;
+    let downPaymentAmount = data.downPaymentAmount || 0;
+
+    if (data.status === 'Dp') {
+      if (data.downPaymentMode === 'amount') {
+        downPaymentAmount = Math.min(downPaymentAmount, total);
+        downPaymentPercentage = total > 0 ? (downPaymentAmount / total) * 100 : 0;
+      } else {
+        downPaymentPercentage = Math.min(Math.max(downPaymentPercentage, 0), 100);
+        downPaymentAmount = (total * downPaymentPercentage) / 100;
+      }
+    } else {
+      downPaymentPercentage = 0;
+      downPaymentAmount = 0;
+    }
+
+    const balanceDue = Math.max(total - downPaymentAmount, 0);
 
     return {
       subtotal,
       taxTotal,
       total,
+      downPaymentPercentage,
       downPaymentAmount,
       balanceDue
     };
@@ -108,7 +130,7 @@ export const InvoiceProvider: React.FC<InvoiceProviderProps> = ({ children }) =>
   const createInvoice = async (data: InvoiceFormData) => {
     if (!userId) throw new Error("User must be logged in to create an invoice");
 
-    const { subtotal, taxTotal, total, downPaymentAmount, balanceDue } = calculateTotals(data);
+    const { subtotal, taxTotal, total, downPaymentPercentage, downPaymentAmount, balanceDue } = calculateTotals(data);
 
     const newInvoiceData = {
       ...data,
@@ -116,6 +138,7 @@ export const InvoiceProvider: React.FC<InvoiceProviderProps> = ({ children }) =>
       subtotal,
       taxTotal,
       total,
+      downPaymentPercentage,
       downPaymentAmount,
       balanceDue,
       createdAt: new Date().toISOString()
@@ -133,13 +156,14 @@ export const InvoiceProvider: React.FC<InvoiceProviderProps> = ({ children }) =>
   const updateInvoice = async (id: string, data: InvoiceFormData) => {
     if (!userId) throw new Error("User must be logged in to update an invoice");
 
-    const { subtotal, taxTotal, total, downPaymentAmount, balanceDue } = calculateTotals(data);
+    const { subtotal, taxTotal, total, downPaymentPercentage, downPaymentAmount, balanceDue } = calculateTotals(data);
 
     const updatedData = {
       ...data,
       subtotal,
       taxTotal,
       total,
+      downPaymentPercentage,
       downPaymentAmount,
       balanceDue
     };

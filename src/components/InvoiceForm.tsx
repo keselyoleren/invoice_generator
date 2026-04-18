@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { InvoiceFormData, InvoiceItem } from '../types/invoice';
-import { Plus, Trash2, Save, Tag, Hash, DollarSign, Percent } from 'lucide-react';
+import { Plus, Trash2, Save, Tag, Hash, Percent, Wallet, Info } from 'lucide-react';
 import LogoUpload from './LogoUpload';
 import TemplateSelector, { InvoiceTemplate } from './TemplateSelector';
+import { formatCurrency } from '../utils/format';
 
 interface InvoiceFormProps {
   initialData?: Partial<InvoiceFormData>;
@@ -134,8 +135,44 @@ const translations: Translations = {
     id: 'Syarat dan ketentuan pembayaran...'
   },
   downPayment: {
-    en: 'Down Payment %',
-    id: 'Uang Muka %'
+    en: 'Down Payment',
+    id: 'Uang Muka'
+  },
+  downPaymentMode: {
+    en: 'DP Input Mode',
+    id: 'Mode Input DP'
+  },
+  percentage: {
+    en: 'Percentage',
+    id: 'Persentase'
+  },
+  fixedAmount: {
+    en: 'Fixed Amount',
+    id: 'Nominal'
+  },
+  dpPreview: {
+    en: 'DP Amount',
+    id: 'Nilai DP'
+  },
+  balanceDue: {
+    en: 'Balance Due',
+    id: 'Sisa Tagihan'
+  },
+  subtotal: {
+    en: 'Subtotal',
+    id: 'Subtotal'
+  },
+  grandTotal: {
+    en: 'Grand Total',
+    id: 'Total'
+  },
+  pelunasanNote: {
+    en: 'Settlement Invoice',
+    id: 'Invoice Pelunasan'
+  },
+  pelunasanDescription: {
+    en: 'This invoice is the settlement for an existing DP invoice.',
+    id: 'Invoice ini adalah pelunasan dari invoice DP sebelumnya.'
   }
 };
 
@@ -190,10 +227,49 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
     notes: initialData?.notes || 'Transfer Bank: BCA No rek 4400136641 Atas Nama Rida Anggita Nurtrisna',
     terms: initialData?.terms || '',
     status: initialData?.status || 'Dp',
-    downPaymentPercentage: initialData?.downPaymentPercentage || 0,
+    downPaymentMode: initialData?.downPaymentMode || 'percentage',
+    downPaymentPercentage: initialData?.downPaymentPercentage ?? 0,
+    downPaymentAmount: initialData?.downPaymentAmount ?? 0,
+    invoiceType: initialData?.invoiceType || 'full',
+    parentInvoiceId: initialData?.parentInvoiceId || '',
+    parentInvoiceNumber: initialData?.parentInvoiceNumber || '',
     currency: initialData?.currency || 'idr',
     language: initialData?.language || 'id'
   });
+
+  const totals = useMemo(() => {
+    const subtotal = formData.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    const taxTotal = formData.items.reduce((sum, item) => {
+      const itemTotal = item.quantity * item.price;
+      return sum + (itemTotal * (item.tax || 0)) / 100;
+    }, 0);
+    const total = subtotal + taxTotal;
+
+    let dpPercentage = formData.downPaymentPercentage || 0;
+    let dpAmount = formData.downPaymentAmount || 0;
+
+    if (formData.status === 'Dp') {
+      if (formData.downPaymentMode === 'amount') {
+        dpAmount = Math.min(dpAmount, total);
+        dpPercentage = total > 0 ? (dpAmount / total) * 100 : 0;
+      } else {
+        dpPercentage = Math.min(Math.max(dpPercentage, 0), 100);
+        dpAmount = (total * dpPercentage) / 100;
+      }
+    } else {
+      dpPercentage = 0;
+      dpAmount = 0;
+    }
+
+    return {
+      subtotal,
+      taxTotal,
+      total,
+      dpPercentage,
+      dpAmount,
+      balanceDue: Math.max(total - dpAmount, 0)
+    };
+  }, [formData.items, formData.status, formData.downPaymentMode, formData.downPaymentPercentage, formData.downPaymentAmount]);
 
   const handleBusinessChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -222,6 +298,22 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
     setFormData({
       ...formData,
       [name]: value
+    });
+  };
+
+  const handleStatusChange = (nextStatus: InvoiceFormData['status']) => {
+    setFormData({
+      ...formData,
+      status: nextStatus,
+      downPaymentPercentage: nextStatus === 'Dp' ? (formData.downPaymentPercentage || 0) : 0,
+      downPaymentAmount: nextStatus === 'Dp' ? (formData.downPaymentAmount || 0) : 0
+    });
+  };
+
+  const handleDpModeChange = (mode: 'percentage' | 'amount') => {
+    setFormData({
+      ...formData,
+      downPaymentMode: mode
     });
   };
 
@@ -485,32 +577,150 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
         </div>
       </div>
 
+      {formData.invoiceType === 'pelunasan' && formData.parentInvoiceNumber && (
+        <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+          <div className="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+            <Info size={18} />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-emerald-900">{t('pelunasanNote')}</p>
+            <p className="text-xs text-emerald-800 mt-0.5">
+              {t('pelunasanDescription')} (<span className="font-mono">#{formData.parentInvoiceNumber}</span>)
+            </p>
+          </div>
+        </div>
+      )}
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('status')}</label>
-        <select
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-        >
-          <option value="Dp">{t('Dp')}</option>
-          <option value="BelumTerbayar">{t('BelumTerbayar')}</option>
-          <option value="Lunas">{t('Lunas')}</option>
-        </select>
+        <div className="grid grid-cols-3 gap-2">
+          {([
+            { value: 'Dp', label: t('Dp'), ring: 'ring-blue-500', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-500' },
+            { value: 'Belum Terbayar', label: t('BelumTerbayar'), ring: 'ring-amber-500', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-500' },
+            { value: 'Lunas', label: t('Lunas'), ring: 'ring-emerald-500', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-500' }
+          ] as const).map(opt => {
+            const active = formData.status === opt.value;
+            return (
+              <button
+                type="button"
+                key={opt.value}
+                onClick={() => handleStatusChange(opt.value)}
+                className={`px-3 py-2.5 rounded-xl border text-sm font-medium transition-all ${active ? `${opt.bg} ${opt.text} ${opt.border} shadow-sm` : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {formData.status === 'Dp' && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">{t('downPayment')}</label>
-          <input
-            type="number"
-            name="downPaymentPercentage"
-            value={formData.downPaymentPercentage}
-            onChange={handleChange}
-            min="0"
-            max="100"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-          />
+        <div className="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-5 space-y-4">
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center">
+              <Wallet size={18} />
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-blue-900">{t('downPayment')}</h4>
+              <p className="text-xs text-blue-700/80">
+                {language === 'id' ? 'Atur uang muka berdasarkan persentase atau nominal tetap.' : 'Set the down payment by percentage or a fixed amount.'}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-blue-900 mb-1.5">{t('downPaymentMode')}</label>
+            <div className="inline-flex rounded-lg bg-white p-1 shadow-sm border border-blue-100">
+              <button
+                type="button"
+                onClick={() => handleDpModeChange('percentage')}
+                className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all ${formData.downPaymentMode !== 'amount' ? 'bg-blue-600 text-white shadow' : 'text-blue-700 hover:text-blue-900'}`}
+              >
+                % {t('percentage')}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDpModeChange('amount')}
+                className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all ${formData.downPaymentMode === 'amount' ? 'bg-blue-600 text-white shadow' : 'text-blue-700 hover:text-blue-900'}`}
+              >
+                {formData.currency === 'usd' ? '$' : 'Rp'} {t('fixedAmount')}
+              </button>
+            </div>
+          </div>
+
+          {formData.downPaymentMode === 'amount' ? (
+            <div>
+              <label className="block text-xs font-medium text-blue-900 mb-1">{t('fixedAmount')}</label>
+              <div className="relative rounded-lg shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-500 text-sm font-medium">
+                    {formData.currency === 'usd' ? '$' : 'Rp'}
+                  </span>
+                </div>
+                <input
+                  type="number"
+                  name="downPaymentAmount"
+                  value={formData.downPaymentAmount || 0}
+                  onChange={(e) => setFormData({ ...formData, downPaymentAmount: parseFloat(e.target.value) || 0 })}
+                  min="0"
+                  max={totals.total}
+                  className="pl-10 block w-full rounded-lg border-blue-200 shadow-sm p-2.5 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+          ) : (
+            <div>
+              <label className="block text-xs font-medium text-blue-900 mb-1">{t('percentage')}</label>
+              <div className="relative rounded-lg shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Percent className="h-4 w-4 text-gray-400" />
+                </div>
+                <input
+                  type="number"
+                  name="downPaymentPercentage"
+                  value={formData.downPaymentPercentage || 0}
+                  onChange={(e) => setFormData({ ...formData, downPaymentPercentage: parseFloat(e.target.value) || 0 })}
+                  min="0"
+                  max="100"
+                  step="1"
+                  className="pl-10 block w-full rounded-lg border-blue-200 shadow-sm p-2.5 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  placeholder="0"
+                />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {[25, 50, 75, 100].map(p => (
+                  <button
+                    type="button"
+                    key={p}
+                    onClick={() => setFormData({ ...formData, downPaymentPercentage: p })}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition ${formData.downPaymentPercentage === p ? 'bg-blue-600 text-white' : 'bg-white text-blue-700 border border-blue-200 hover:bg-blue-100'}`}
+                  >
+                    {p}%
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-blue-200">
+            <div className="bg-white rounded-lg p-3 shadow-sm">
+              <p className="text-[10px] font-semibold text-blue-700/70 uppercase tracking-wider">{t('dpPreview')}</p>
+              <p className="text-base font-bold text-blue-900 mt-0.5">
+                {formatCurrency(totals.dpAmount, formData.currency)}
+              </p>
+              <p className="text-[10px] text-blue-700/70">{totals.dpPercentage.toFixed(1)}% {language === 'id' ? 'dari total' : 'of total'}</p>
+            </div>
+            <div className="bg-white rounded-lg p-3 shadow-sm">
+              <p className="text-[10px] font-semibold text-orange-700/70 uppercase tracking-wider">{t('balanceDue')}</p>
+              <p className="text-base font-bold text-orange-600 mt-0.5">
+                {formatCurrency(totals.balanceDue, formData.currency)}
+              </p>
+              <p className="text-[10px] text-orange-700/70">
+                {language === 'id' ? 'Total' : 'Total'} {formatCurrency(totals.total, formData.currency)}
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
