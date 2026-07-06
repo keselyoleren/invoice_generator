@@ -404,21 +404,30 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
     });
   };
 
+  // Select the whole value on focus so users can overwrite a "0" without clearing it first.
+  const selectOnFocus = (e: React.FocusEvent<HTMLInputElement>) => e.target.select();
+  // Prevent the mouse wheel from silently changing a focused number field while scrolling.
+  const blurOnWheel = (e: React.WheelEvent<HTMLInputElement>) => e.currentTarget.blur();
+
+  // Shared style for item-row inputs: large, dark, medium-weight text so entered values are clearly readable.
+  const itemInputClass =
+    'pl-10 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base text-gray-900 font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition';
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-lg p-6 shadow-md">
       <div className="flex justify-end mb-4">
-        <div className="inline-flex rounded-md shadow-sm">
+        <div className="inline-flex rounded-xl bg-gray-100 p-1 shadow-sm">
           <button
             type="button"
             onClick={() => handleLanguageChange('id')}
-            className={`px-4 py-2 text-sm font-medium rounded-l-lg ${language === 'id' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+            className={`px-4 py-2 text-sm font-semibold rounded-lg transition active:scale-95 ${language === 'id' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:text-gray-900'}`}
           >
             ID (Rp)
           </button>
           <button
             type="button"
             onClick={() => handleLanguageChange('en')}
-            className={`px-4 py-2 text-sm font-medium rounded-r-lg ${language === 'en' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+            className={`px-4 py-2 text-sm font-semibold rounded-lg transition active:scale-95 ${language === 'en' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:text-gray-900'}`}
           >
             EN ($)
           </button>
@@ -447,8 +456,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               name="name"
               value={formData.business.name}
               onChange={handleBusinessChange}
+              autoComplete="organization"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+              className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder={t('businessName')}
             />
           </div>
@@ -459,8 +469,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               name="email"
               value={formData.business.email}
               onChange={handleBusinessChange}
+              autoComplete="email"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+              className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder="business@example.com"
             />
           </div>
@@ -470,20 +481,23 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               name="address"
               value={formData.business.address}
               onChange={handleBusinessChange}
+              autoComplete="street-address"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+              className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder={t('address')}
               rows={3}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">{t('phone')}</label>
+            <label className="block text-sm font-medium text-gray-700">{t('phone')} <span className="text-gray-400 font-normal">({language === 'id' ? 'opsional' : 'optional'})</span></label>
             <input
-              type="text"
+              type="tel"
+              inputMode="tel"
               name="phone"
               value={formData.business.phone || ''}
               onChange={handleBusinessChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+              autoComplete="tel"
+              className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder="+62 812 3456 7890"
             />
           </div>
@@ -498,8 +512,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               name="name"
               value={formData.customer.name}
               onChange={handleCustomerChange}
+              autoComplete="off"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+              className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder={t('customerName')}
             />
           </div>
@@ -510,8 +525,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               name="email"
               value={formData.customer.email}
               onChange={handleCustomerChange}
+              autoComplete="off"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+              className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder="customer@example.com"
             />
           </div>
@@ -521,20 +537,23 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               name="address"
               value={formData.customer.address}
               onChange={handleCustomerChange}
+              autoComplete="off"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+              className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder={t('address')}
               rows={3}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">{t('phone')}</label>
+            <label className="block text-sm font-medium text-gray-700">{t('phone')} <span className="text-gray-400 font-normal">({language === 'id' ? 'opsional' : 'optional'})</span></label>
             <input
-              type="text"
+              type="tel"
+              inputMode="tel"
               name="phone"
               value={formData.customer.phone || ''}
               onChange={handleCustomerChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+              autoComplete="off"
+              className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder="+62 812 3456 7890"
             />
           </div>
@@ -550,7 +569,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             value={formData.invoiceNumber}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+            className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           />
         </div>
         <div>
@@ -561,7 +580,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             value={formData.date}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+            className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           />
         </div>
         <div>
@@ -572,7 +591,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             value={formData.dueDate}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+            className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           />
         </div>
       </div>
@@ -659,12 +678,16 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 </div>
                 <input
                   type="number"
+                  inputMode="decimal"
                   name="downPaymentAmount"
                   value={formData.downPaymentAmount || 0}
                   onChange={(e) => setFormData({ ...formData, downPaymentAmount: parseFloat(e.target.value) || 0 })}
+                  onFocus={selectOnFocus}
+                  onWheel={blurOnWheel}
+                  aria-label={t('fixedAmount')}
                   min="0"
                   max={totals.total}
-                  className="pl-10 block w-full rounded-lg border-blue-200 shadow-sm p-2.5 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="pl-10 block w-full rounded-lg border border-blue-200 shadow-sm p-2.5 text-base text-gray-900 font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                   placeholder="0"
                 />
               </div>
@@ -678,13 +701,17 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 </div>
                 <input
                   type="number"
+                  inputMode="numeric"
                   name="downPaymentPercentage"
                   value={formData.downPaymentPercentage || 0}
                   onChange={(e) => setFormData({ ...formData, downPaymentPercentage: parseFloat(e.target.value) || 0 })}
+                  onFocus={selectOnFocus}
+                  onWheel={blurOnWheel}
+                  aria-label={t('percentage')}
                   min="0"
                   max="100"
                   step="1"
-                  className="pl-10 block w-full rounded-lg border-blue-200 shadow-sm p-2.5 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="pl-10 block w-full rounded-lg border border-blue-200 shadow-sm p-2.5 text-base text-gray-900 font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                   placeholder="0"
                 />
               </div>
@@ -732,6 +759,15 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
           </span>
         </h3>
 
+        {/* Column headers (desktop only) — labels the icon-only fields below */}
+        <div className="hidden md:grid md:grid-cols-12 gap-4 px-4 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+          <div className="md:col-span-4">{t('description')}</div>
+          <div className="md:col-span-2">{t('quantity')}</div>
+          <div className="md:col-span-3">{t('price')}</div>
+          <div className="md:col-span-2">{t('tax')}</div>
+          <div className="md:col-span-1 text-center">{t('action')}</div>
+        </div>
+
         <div className="space-y-4">
           {formData.items.map((item, index) => (
             <div
@@ -763,7 +799,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                       value={item.description}
                       onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
                       required
-                      className="pl-10 block w-full rounded-md border-gray-300 shadow-sm p-2.5 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className={itemInputClass}
                       placeholder={t('description')}
                     />
                   </div>
@@ -778,11 +814,15 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                     </div>
                     <input
                       type="number"
+                      inputMode="numeric"
                       value={item.quantity}
                       onChange={(e) => handleItemChange(item.id, 'quantity', parseInt(e.target.value) || 0)}
+                      onFocus={selectOnFocus}
+                      onWheel={blurOnWheel}
+                      aria-label={t('quantity')}
                       required
                       min="1"
-                      className="pl-10 block w-full rounded-md border-gray-300 shadow-sm p-2.5 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className={itemInputClass}
                       placeholder="Qty"
                     />
                   </div>
@@ -799,11 +839,15 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                     </div>
                     <input
                       type="number"
+                      inputMode="decimal"
                       value={item.price}
                       onChange={(e) => handleItemChange(item.id, 'price', parseFloat(e.target.value) || 0)}
+                      onFocus={selectOnFocus}
+                      onWheel={blurOnWheel}
+                      aria-label={t('price')}
                       required
                       min="0"
-                      className="pl-10 block w-full rounded-md border-gray-300 shadow-sm p-2.5 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className={itemInputClass}
                       placeholder="0.00"
                     />
                   </div>
@@ -818,11 +862,15 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                     </div>
                     <input
                       type="number"
+                      inputMode="decimal"
                       value={item.tax || 0}
                       onChange={(e) => handleItemChange(item.id, 'tax', parseFloat(e.target.value) || 0)}
+                      onFocus={selectOnFocus}
+                      onWheel={blurOnWheel}
+                      aria-label={t('tax')}
                       min="0"
                       step="0.1"
-                      className="pl-10 block w-full rounded-md border-gray-300 shadow-sm p-2.5 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className={itemInputClass}
                       placeholder="0"
                     />
                   </div>
@@ -831,7 +879,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 {/* Actions & Total */}
                 <div className="md:col-span-1 flex items-center justify-between md:justify-center h-full pt-1">
                   <div className="md:hidden font-medium text-gray-700">
-                    Total: {formData.currency === 'usd' ? '$' : 'Rp'} {(item.quantity * item.price).toLocaleString()}
+                    {t('total')}: {formatCurrency(item.quantity * item.price, formData.currency)}
                   </div>
                   <button
                     type="button"
@@ -842,6 +890,12 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                     <Trash2 size={18} />
                   </button>
                 </div>
+              </div>
+
+              {/* Line total (desktop) */}
+              <div className="hidden md:flex justify-end items-center gap-2 mt-3 pt-3 border-t border-gray-200">
+                <span className="text-xs text-gray-500 uppercase tracking-wide">{t('total')}</span>
+                <span className="text-sm font-semibold text-gray-800">{formatCurrency(item.quantity * item.price, formData.currency)}</span>
               </div>
             </div>
           ))}
@@ -862,7 +916,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
           name="notes"
           value={formData.notes}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+          className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           rows={3}
           placeholder={t('additionalNotes')}
         />
@@ -874,7 +928,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
           name="terms"
           value={formData.terms}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+          className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2.5 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           rows={3}
           placeholder={t('paymentTerms')}
         />
@@ -884,7 +938,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
         <button
           type="submit"
           disabled={isLoading}
-          className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+          className={`w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white transition active:scale-[0.98] ${isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
         >
           {isLoading ? (
             <>

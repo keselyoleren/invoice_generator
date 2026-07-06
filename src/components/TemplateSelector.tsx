@@ -44,12 +44,13 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ selectedTemplate, o
     <div className="space-y-4">
       <label className="block text-sm font-medium text-gray-700">Pilih Template Invoice</label>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {templates.map((template) => (
-          <div
+          <button
+            type="button"
             key={template.id}
-            className={`relative cursor-pointer rounded-lg border-2 p-4 transition-all ${selectedTemplate === template.id
-                ? 'border-blue-500 bg-blue-50'
+            className={`relative text-left cursor-pointer rounded-xl border-2 p-3 sm:p-4 transition-all active:scale-[0.98] ${selectedTemplate === template.id
+                ? 'border-blue-500 bg-blue-50 shadow-sm'
                 : 'border-gray-200 hover:border-gray-300'
               }`}
             onClick={() => onTemplateChange(template.id)}
@@ -62,7 +63,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ selectedTemplate, o
               </div>
             )}
 
-            <div className={`h-20 w-full rounded-md mb-3 ${template.preview} flex items-center justify-center`}>
+            <div className={`h-16 sm:h-20 w-full rounded-md mb-3 ${template.preview} flex items-center justify-center`}>
               <div className="text-center">
                 <div className={`h-2 w-16 ${template.accent} rounded mb-2 mx-auto`}></div>
                 <div className="h-1 w-12 bg-gray-300 rounded mx-auto"></div>
@@ -70,8 +71,8 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ selectedTemplate, o
             </div>
 
             <h3 className="font-medium text-gray-900">{template.name}</h3>
-            <p className="text-sm text-gray-500 mt-1">{template.description}</p>
-          </div>
+            <p className="hidden sm:block text-sm text-gray-500 mt-1">{template.description}</p>
+          </button>
         ))}
       </div>
     </div>

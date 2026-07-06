@@ -22,6 +22,11 @@ const EditInvoice: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<InvoiceTemplate>('modern');
   const [mobileTab, setMobileTab] = useState<MobileTab>('form');
 
+  const switchTab = (tab: MobileTab) => {
+    setMobileTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const { toPDF, targetRef } = usePDF({
     filename: `invoice-${previewInvoice?.invoiceNumber || 'edit'}.pdf`,
     resolution: 2,
@@ -100,7 +105,7 @@ const EditInvoice: React.FC = () => {
 
         <div className="lg:hidden mb-4 bg-white rounded-xl shadow-sm border border-gray-100 p-1 flex">
           <button
-            onClick={() => setMobileTab('form')}
+            onClick={() => switchTab('form')}
             className={`flex-1 inline-flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-lg transition ${
               mobileTab === 'form' ? 'bg-slate-900 text-white' : 'text-gray-600'
             }`}
@@ -108,7 +113,7 @@ const EditInvoice: React.FC = () => {
             <Pencil size={14} /> Form
           </button>
           <button
-            onClick={() => setMobileTab('preview')}
+            onClick={() => switchTab('preview')}
             className={`flex-1 inline-flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-lg transition ${
               mobileTab === 'preview' ? 'bg-slate-900 text-white' : 'text-gray-600'
             }`}
@@ -182,7 +187,7 @@ const EditInvoice: React.FC = () => {
       </div>
 
       {/* Mobile sticky bottom bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 px-3 py-3 shadow-lg z-20">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 px-3 pt-3 pb-safe shadow-lg z-20">
         <button
           onClick={handleDownloadPDF}
           className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl shadow-md text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] transition"
